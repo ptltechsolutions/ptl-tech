@@ -182,6 +182,7 @@ async function handleFormSubmit(e) {
             'https://script.google.com/macros/s/AKfycbxdsLdGGDgOdZBxzKHhc15HsXEDq0c4_YiQdoerC7_Emn5NPeHjx9vwqfAIkCPeYUGsWQ/exec',
             {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -189,17 +190,12 @@ async function handleFormSubmit(e) {
             }
         );
 
-        const result = await response.json();
+        alert('Thank you! Your enquiry has been submitted.');
 
-        if (result.success) {
-            alert('Thank you! Your enquiry has been submitted.');
-            contactForm.reset();
-        } else {
-            alert('Something went wrong. Please try again.');
-        }
+        contactForm.reset();
 
     } catch (error) {
-        console.error(error);
+        console.error('Form Error:', error);
         alert('Error submitting form.');
     }
 }
