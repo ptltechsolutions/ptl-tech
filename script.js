@@ -163,33 +163,45 @@ function animateOnScroll() {
 }
 
 // ===== Contact Form Handler =====
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
     e.preventDefault();
 
     const formData = new FormData(contactForm);
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
 
-    // Show success message (in a real app, you'd send this to a server)
-    alert('Thank you for your message! We will get back to you soon.');
-    contactForm.reset();
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        company: formData.get('company'),
+        subject: formData.get('subject'),
+        message: formData.get('message')
+    };
 
-    // You can replace the above with actual form submission:
-    // fetch('/api/contact', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(data)
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     alert('Message sent successfully!');
-    //     contactForm.reset();
-    // })
-    // .catch(error => {
-    //     alert('There was an error sending your message. Please try again.');
-    // });
+    try {
+        const response = await fetch(
+            'https://script.google.com/macros/s/AKfycbxdsLdGGDgOdZBxzKHhc15HsXEDq0c4_YiQdoerC7_Emn5NPeHjx9vwqfAIkCPeYUGsWQ/exec',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert('Thank you! Your enquiry has been submitted.');
+            contactForm.reset();
+        } else {
+            alert('Something went wrong. Please try again.');
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert('Error submitting form.');
+    }
 }
 
 // ===== Counter Animation =====
